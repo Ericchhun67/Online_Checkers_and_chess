@@ -1,4 +1,5 @@
 ♟️ Online Checkers & Chess
+
 A full-stack, real-time multiplayer web application where players can compete in Checkers and Chess online. Built with Flask, Socket.IO, and SQLite — featuring matchmaking, ELO rankings, AI opponents, and game history.
 
 🚀 Tech Stack
