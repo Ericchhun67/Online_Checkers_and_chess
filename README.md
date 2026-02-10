@@ -16,7 +16,6 @@ Game state persistence with SQLite
 Responsive UI for desktop and mobile
 
 Getting Started
-bashgit clone https://github.com/yourusername/online_Checkers.git
 cd online_Checkers
 pip install -r requirements.txt
 python app.py
