@@ -1,0 +1,5 @@
+body {
+    background-image: url("../img/game_bg.png");
+    background-size: cover;
+    background-attachment: fixed;
+}
