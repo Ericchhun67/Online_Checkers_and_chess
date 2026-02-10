@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>SocketIO Lobby Test</title>
+  <script src="https://cdn.socket.io/4.7.2/socket.io.min.js"></script>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #121212;
+      color: #fff;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 20px;
+    }
+
+    h1 {
+      color: #00b4d8;
+    }
+
+    input, button {
+      margin: 6px;
+      padding: 10px;
+      border-radius: 8px;
+      border: none;
+    }
+
+    input {
+      width: 200px;
+    }
+
+    button {
+      cursor: pointer;
+      background: #0077b6;
+      color: white;
+      transition: background 0.2s ease;
+    }
+
+    button:hover {
+      background: #0096c7;
+    }
+
+    #log {
+      margin-top: 20px;
+      padding: 15px;
+      background: #1a1a1a;
+      border-radius: 10px;
+      width: 400px;
+      height: 300px;
+      overflow-y: auto;
+    }
+
+    .msg {
+      margin: 5px 0;
+    }
+
+    .server {
+      color: #90e0ef;
+    }
+
+    .event {
+      color: #fcbf49;
+    }
+
+    .error {
+      color: #ff6b6b;
+    }
+  </style>
+</head>
+<body>
+  <h1>🧠 Chess & Checkers SocketIO Lobby</h1>
+
+  <div>
+    <input id="username" placeholder="Enter username" />
+    <input id="room" placeholder="Enter room name" />
+  </div>
+
+  <div>
+    <button id="connect">Connect</button>
+    <button id="disconnect">Disconnect</button>
+    <button id="createRoom">Create Room</button>
+    <button id="joinRoom">Join Room</button>
+    <button id="leaveRoom">Leave Room</button>
+    <button id="getRooms">Get Rooms</button>
+  </div>
+
+  <div id="log"></div>
+
+  <script>
+    let socket;
+    const log = document.getElementById("log");
+
+    function logMessage(msg, type = "server") {
+      const p = document.createElement("p");
+      p.textContent = msg;
+      p.className = `msg ${type}`;
+      log.appendChild(p);
+      log.scrollTop = log.scrollHeight;
+    }
+
+    document.getElementById("connect").addEventListener("click", () => {
+      socket = io("http://127.0.0.1:5000");
+
+      socket.on("connect", () => logMessage("✅ Connected to server", "event"));
+      socket.on("disconnect", () => logMessage("❌ Disconnected", "event"));
+      socket.on("server_message", data => logMessage(`📢 ${data.message}`, "server"));
+      socket.on("room_created", data => logMessage(`🏠 Room created: ${data.room_name} (${data.game_type})`, "event"));
+      socket.on("room_joined", data => logMessage(`👤 ${data.username} joined ${data.room_name}`, "event"));
+      socket.on("room_left", data => logMessage(`🚪 ${data.username} left ${data.room_name}`, "event"));
+      socket.on("rooms_list", data => logMessage(`📋 Active Rooms: ${data.rooms.join(", ")}`, "event"));
+      socket.on("error", data => logMessage(`⚠️ Error: ${data.message}`, "error"));
+    });
+
+    document.getElementById("disconnect").addEventListener("click", () => {
+      if (socket) {
+        socket.disconnect();
+        logMessage("Manually disconnected.", "event");
+      }
+    });
+
+    document.getElementById("createRoom").addEventListener("click", () => {
+      const room = document.getElementById("room").value;
+      socket.emit("create_room", { room_name: room, game_type: "checkers" });
+      logMessage(`🛠️ Creating room '${room}'...`);
+    });
+
+    document.getElementById("joinRoom").addEventListener("click", () => {
+      const username = document.getElementById("username").value;
+      const room = document.getElementById("room").value;
+      socket.emit("join_room", { username, room_name: room });
+      logMessage(`👤 Joining room '${room}' as ${username}...`);
+    });
+
+    document.getElementById("leaveRoom").addEventListener("click", () => {
+      const username = document.getElementById("username").value;
+      const room = document.getElementById("room").value;
+      socket.emit("leave_room", { username, room_name: room });
+      logMessage(`🚪 Leaving room '${room}'...`);
+    });
+
+    document.getElementById("getRooms").addEventListener("click", () => {
+      socket.emit("get_rooms");
+      logMessage("🔍 Fetching active rooms...");
+    });
+  </script>
+</body>
+</html>

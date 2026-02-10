@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+{% block title %} Won Page {% endblock %}
+
+{% block styles %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/win.css') }}" />
+{% endblock %}
+
+{% block content %}
+<div class="win-page">
+    <div class="win-overlay">
+        <section class="win-card">
+            <header class="win-header">
+                <h1>{{ title }}</h1>
+                <p>{{ subtitle }}</p>
+            </header>
+
+            <div class="stats-panel">
+                <div class="stat-item">
+                    <div class="stat-value">{{ rating_delta }}</div>
+                    <div class="stat-label">Rating</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-value">{{ moves }}</div>
+                    <div class="stat-label">Moves</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-value">{{ duration_display }}</div>
+                    <div class="stat-label">Duration</div>
+                </div>
+            </div>
+
+            <div class="actions-row">
+                {% if mode == "ai" %}
+                    {% set replay_url = url_for('game_bp.ai_game', game=game_type) %}
+                {% else %}
+                    {% set replay_url = url_for('game_bp.pvp_game', game=game_type) %}
+                {% endif %}
+                <a class="action-btn ghost" href="{{ replay_url }}">View Replay</a>
+                <a class="action-btn solid" href="{{ replay_url }}">Play again</a>
+                <a class="action-btn ghost" href="{{ url_for('lobby_bp.lobby_page') }}">Lobby</a>
+            </div>
+
+            <div class="ranking-panel">
+                <h2>Ranking</h2>
+                <p>Winner: {{ winner_name }}</p>
+                <p>Game: {{ game_type | title }} ({{ mode | upper }})</p>
+            </div>
+        </section>
+    </div>
+</div>
+{% endblock %}

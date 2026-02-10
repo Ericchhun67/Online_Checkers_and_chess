@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %} Chess and Checkers {% endblock %} </title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/base.css') }}" />
+    
+    
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+    
+    {% block styles %}{% endblock %}
+    {% block head_scripts %}{% endblock %}
+    
+</head>
+
+<body>
+    <!-- Navbar -->
+    <header class="navbar">
+    <!-- navbar-left -->
+    <div class="navbar-left">
+        <!-- Login page -->
+        <a href="{{ url_for('home') }}">Login</a>
+    </div>
+    </header>
+    
+    <main>
+        {% block content %}{% endblock %}
+    </main>
+
+    <footer>
+        <p>&copy; 2026 Chess and Checkers. All rights reserved.</p>
+    </footer>
+    
+    
+    <!-- js -->
+    
+    {% block scripts %}{% endblock %}
+</body>
+</html>
+
+
+   
+
+    
+    

@@ -1,0 +1,98 @@
+{% extends "base.html" %}
+{% block title %} Game - Player vs Player {% endblock %}
+
+{% block styles %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/game.css') }}" />
+{% endblock %}
+
+{% block content %}
+<div class="game-page">
+    <div class="game-layout">
+        <aside class="left-column">
+            <div class="player-card opponent">
+                <div class="player-avatar"></div>
+                <div class="player-info">
+                    <span class="player-name">Player 2</span>
+                    <span class="player-subtitle">Black pieces</span>
+                </div>
+            </div>
+
+            <div class="panel move-history">
+                <h3>Move History</h3>
+                <ul id="move-history-list"></ul>
+            </div>
+
+            <div class="player-card you">
+                <div class="player-avatar"></div>
+                <div class="player-info">
+                    <span class="player-name">{{ username }}</span>
+                    <span class="player-subtitle">White pieces</span>
+                </div>
+            </div>
+        </aside>
+
+        <main class="board-area">
+            <div class="board-shell">
+                <div class="board-title">{{ game_type | title }} (PvP)</div>
+                <div class="board-grid" data-game="{{ game_type }}">
+                    {% set back_rank = ['r', 'n', 'b', 'q', 'k', 'b', 'n', 'r'] %}
+                    {% set piece_labels = {
+                        'p': 'P',
+                        'r': 'R',
+                        'n': 'N',
+                        'b': 'B',
+                        'q': 'Q',
+                        'k': 'K'
+                    } %}
+                    {% for row in range(8) %}
+                        {% for col in range(8) %}
+                            {% set is_dark = (row + col) % 2 == 1 %}
+                            <div class="square {{ 'dark' if is_dark else 'light' }}">
+                                {% if game_type == 'checkers' %}
+                                    {% if is_dark and row < 3 %}
+                                        <div class="piece checker black"></div>
+                                    {% elif is_dark and row > 4 %}
+                                        <div class="piece checker white"></div>
+                                    {% endif %}
+                                {% else %}
+                                    {% if row == 0 %}
+                                        {% set piece = back_rank[col] %}
+                                        <div class="piece chess black" data-piece="{{ piece }}">
+                                            {{ piece_labels[piece] }}
+                                        </div>
+                                    {% elif row == 1 %}
+                                        <div class="piece chess black" data-piece="p">P</div>
+                                    {% elif row == 6 %}
+                                        <div class="piece chess white" data-piece="p">P</div>
+                                    {% elif row == 7 %}
+                                        {% set piece = back_rank[col] %}
+                                        <div class="piece chess white" data-piece="{{ piece }}">
+                                            {{ piece_labels[piece] }}
+                                        </div>
+                                    {% endif %}
+                                {% endif %}
+                            </div>
+                        {% endfor %}
+                    {% endfor %}
+                </div>
+            </div>
+        </main>
+
+        <aside class="right-column">
+            <div class="panel chat-panel">
+                <h3>Game Status</h3>
+                <div id="status-message" class="chat-bubble">White moves first!</div>
+                <div class="turn-timer">
+                    <span class="timer-label">Turn Timer</span>
+                    <span id="turn-timer" class="timer-value">02:00</span>
+                </div>
+            </div>
+            <button id="leave-game" class="leave-btn" type="button">Leave Game</button>
+        </aside>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ url_for('static', filename='js/game_pvp.js') }}"></script>
+{% endblock %}

@@ -1,0 +1,55 @@
+{% extends "base.html" %}
+{% block title %} Lobby - Chess and Checkers {% endblock %}
+
+{% block styles %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/lobby.css') }}" />
+{% endblock %}
+
+{% block content %}
+<div class="lobby-page">
+    <div class="lobby-top">
+        <div class="lobby-brand">
+            <img src="{{ url_for('static', filename='img/logo/controllerlogo.png') }}" alt="Controller logo">
+            <div class="lobby-text">
+                <span class="lobby-kicker">Game Lobby</span>
+                <h1>Welcome, {{ username }}</h1>
+            </div>
+        </div>
+        <form action="{{ url_for('auth.logout_user') }}" method="POST">
+            <button class="logout-btn" type="submit">Logout</button>
+        </form>
+    </div>
+
+    <div class="lobby-body">
+        <section class="lobby-card">
+            <h2>Choose a game mode</h2>
+            <p>Select how do you want to play</p>
+
+            <div class="mode-toggle">
+                <button type="button" class="mode-btn active" data-mode="ai">Player vs AI</button>
+                <button type="button" class="mode-btn" data-mode="pvp">Player Vs Player</button>
+            </div>
+
+            <div class="game-select">
+                <button type="button" class="game-card chess" data-game="chess">Chess</button>
+                <button type="button" class="game-card checkers active" data-game="checkers">Checkers</button>
+            </div>
+       
+
+            <button type="button" class="play-btn" id="play-btn">Play</button>
+            <p class="play-note" id="play-note" aria-live="polite"></p>
+        </section>
+
+        <aside class="leaderboard-card">
+            <h3>LeaderBoard</h3>
+            <div class="leaderboard-body">
+                <p>No rankings yet.</p>
+            </div>
+        </aside>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ url_for('static', filename='js/lobby.js') }}"></script>
+{% endblock %}
